@@ -1,0 +1,22 @@
+{% extends 'default/index.html.twig' %}
+
+{% block content %}
+
+{% block fos_user_content %}
+{% include "FOSUserBundle:Registration:register_content.html.twig" %}
+{% endblock fos_user_content %}
+
+{% endblock content %}
+
+{%block stylesheets %}
+    {{ parent() }}
+<style>
+label {
+    display: block;
+    float: left;
+    margin-right: 61px;
+    min-width: 166px;
+    width: 100px;
+}   
+</style>
+{% endblock %}
