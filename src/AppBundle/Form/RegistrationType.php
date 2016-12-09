@@ -4,14 +4,24 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('nick')
-                ->add('birthDate')
-                ->add('gender');
+                ->add('birthDate', DateType::class, [
+                    'widget' => 'choice',
+                    'years' => range(date("Y"), date("Y") - 100)
+                ])
+                ->add('gender', ChoiceType::class, [
+                    'choices' => [
+                        'Male' => 1,
+                        'Female' => 2,
+                    ]
+                ]);
     }
 
     public function getParent()
