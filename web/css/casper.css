@@ -26,7 +26,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 }
 
 
-#registerBox label {
+#registerBox label, #eventBox label {
     display: block;
     float: left;
     margin-right: 61px;
@@ -47,4 +47,9 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 }
 #loginBox #_submit {
     float: right;
+}
+
+#appbundle_event_eventDate_date, #appbundle_event_eventDate_time {
+    float: left;
+    margin-right: 3px;
 }

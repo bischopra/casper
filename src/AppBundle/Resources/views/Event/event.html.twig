@@ -1,0 +1,72 @@
+{% extends 'default/index.html.twig' %}
+
+{% block title %}Dodaj event{% endblock %}
+
+{% block content %}
+    <div id="eventBox">
+        {{ form_start(form) }}
+
+        <div>
+            {{ form_label(form.name) }}
+            {{ form_errors(form.name) }}
+            {{ form_widget(form.name) }}
+        </div>
+        <div>
+            {{ form_label(form.city) }}
+            {{ form_errors(form.city) }}
+            {{ form_widget(form.city) }}
+        </div>
+        <div>
+            {{ form_label(form.address) }}
+            {{ form_errors(form.address) }}
+            {{ form_widget(form.address) }}
+        </div>
+        <div>
+            {{ form_label(form.description) }}
+            {{ form_errors(form.description) }}
+            {{ form_widget(form.description) }}
+        </div>
+        <div>
+            {{ form_label(form.eventDate) }}
+            {{ form_errors(form.eventDate) }}
+            {{ form_widget(form.eventDate) }}
+        </div>
+        <div style="clear: both;"></div>
+        <div>
+            {{ form_label(form.duration) }}
+            {{ form_errors(form.duration) }}
+            {{ form_widget(form.duration) }}
+        </div>
+        <div>
+            {{ form_label(form.maxGuestCount) }}
+            {{ form_errors(form.maxGuestCount) }}
+            {{ form_widget(form.maxGuestCount) }}
+        </div>
+        <div>
+            {{ form_label(form.applyEndDate) }}
+            {{ form_errors(form.applyEndDate) }}
+            {{ form_widget(form.applyEndDate) }}
+        </div>
+        <div>
+            {{ form_label(form.isPrivate) }}
+            {{ form_errors(form.isPrivate) }}
+            {{ form_widget(form.isPrivate) }}
+        </div>
+        <div>
+            {{ form_widget(form.latitude) }}
+        </div>
+        <div>
+            {{ form_widget(form.longitude) }}
+        </div>
+        <div>
+            {{ form_label(form.save) }}
+            {{ form_widget(form.save) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
+    <div id="map" style="width:100%;height:500px"></div>
+    <script src="{{ asset('js/map.js') }}" rel="stylesheet"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkRDMSX2SM5qU3YEwbCmbTZ9WnnC7-L4A&callback=map.init"></script>
+{% endblock %}
+
+

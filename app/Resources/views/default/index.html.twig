@@ -17,6 +17,16 @@
         <div id="container">
             <div id="welcome">
                 <h1><span>Welcome to</span> Casper Events</h1>
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <a href="{{ path('event') }}">Add Event</a>
+                {% endif %}
+                
+                <h2>Events:</h2>
+                <ul>
+                    {% for event in events %}
+                        <li>{{ event.name }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
         {% endblock %}
