@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Event;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Utils\EventUtils;
 
 class EventController extends Controller
 {
@@ -18,8 +19,6 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $event = new Event();
-        $event->setEventDate(new \DateTime());
-        $event->setApplyEndDate(new \DateTime());
         if ($id > 0)
         {
             $event = $em->getRepository('AppBundle:Event')->find($id);
@@ -31,15 +30,34 @@ class EventController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             $event = $form->getData('appbundle_event');
+            $event->setUser($this->getUser());
+            $event->setAlias(EventUtils::makeAlias($event->getName(), $event->getId()));
 
             $em->persist($event);
             $em->flush();
 
-            return $this->redirectToRoute('app_event_events');
+            $event->setAlias(EventUtils::makeAlias($event->getName(), $event->getId()));
+            $em->persist($event);
+            $em->flush();
+
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('AppBundle:Event:event.html.twig', array(
             'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/event/{alias}", name="event_details")
+     */
+    public function eventDetailsAction($alias)
+    {
+        $id = EventUtils::decodeAliasToID($alias);
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('AppBundle:Event')->find($id);
+        return $this->render('AppBundle:Event:eventDetails.html.twig', array(
+            'event' => $event,
         ));
     }
 

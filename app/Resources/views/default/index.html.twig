@@ -13,20 +13,26 @@
                 <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
             {% endif %}
         </div>
+        <div class="clr"></div>
         {% block content %}
         <div id="container">
             <div id="welcome">
                 <h1><span>Welcome to</span> Casper Events</h1>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     <a href="{{ path('event') }}">Add Event</a>
+                    <a href="{{ path('app_event_events') }}">Events I added</a>
+                    <a href="{{ path('app_event_events') }}">Events I attend</a>
                 {% endif %}
-                
-                <h2>Events:</h2>
-                <ul>
-                    {% for event in events %}
-                        <li>{{ event.name }}</li>
-                    {% endfor %}
-                </ul>
+            </div>
+            <h2>Events:</h2>
+            <div class="events">
+                {% for event in events %}
+                    <div class="event">
+                        <a href="{{ path('event_details', {'alias': event.alias}) }}" title="{{ event.name }}">{{ event.name|slice(0, 30) }}</a><br/>
+                        <span title="Can sign up untill: {{ event.applyEndDate|date('M d Y') }}">{{ event.eventDate|date('M d Y H:i') }}</span><br/>
+                        <span>{{ event.address }}, {{ event.city|capitalize }}</span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         {% endblock %}

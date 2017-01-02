@@ -14,7 +14,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         $rs = $this->getDoctrine()->getRepository('AppBundle:Event');
-        $events = $rs->findBy(['isPrivate' => 0], ['eventDate' => 'desc']);
+        $events = $rs->getPublicEvents();
 
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,

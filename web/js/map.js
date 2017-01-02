@@ -35,6 +35,28 @@ var marker = {
 
 var map = {
     gmap: '',
+    event: function(){
+        var mapCanvas = document.getElementById("map");
+        var mapOptions = {
+            center: new google.maps.LatLng($(mapCanvas).attr('data-lat'),$(mapCanvas).attr('data-lng')),
+            zoom: 14,
+            disableDefaultUI: true,
+            zoomControl: true
+        };        
+        map.gmap = new google.maps.Map(mapCanvas, mapOptions);
+        var pos = {
+          lat: $(mapCanvas).attr('data-lat')*1,
+          lng: $(mapCanvas).attr('data-lng')*1
+        };
+        
+        var markerTitle = $('.details .name').text().trim();
+        var m = new google.maps.Marker({
+            position: pos,
+            map: map.gmap,
+            title: markerTitle
+        });
+        m.setMap(map.gmap);
+    },
     init: function(){
         var mapCanvas = document.getElementById("map");
         var mapOptions = {

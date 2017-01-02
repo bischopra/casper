@@ -3,9 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Repository\EventRepository;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
  * @ORM\Table(name="events")
  */
 class Event
@@ -21,6 +22,11 @@ class Event
      * @ORM\Column(type="string")
      */
     protected $name;
+
+    /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $alias;
 
     /**
      * @ORM\Column(type="string")
@@ -77,6 +83,11 @@ class Event
      */
     protected $user;
 
+    public function __construct()
+    {
+        $this->eventDate = new \DateTime;
+        $this->applyEndDate = new \DateTime;
+    }
     /**
      * Get id
      *
@@ -373,5 +384,29 @@ class Event
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set alias
+     *
+     * @param string $alias
+     *
+     * @return Event
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Get alias
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
     }
 }

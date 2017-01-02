@@ -1,0 +1,31 @@
+{% extends 'default/index.html.twig' %}
+
+{% block title %}{{ event.name|capitalize }} event details{% endblock %}
+
+{% block content %}
+<div class="event-details">
+    <div id="map" class="map fleft" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}"></div>
+    <div class="details fleft">
+        <div>
+            <span>{% if event.maxGuestCount and date(event.applyEndDate) > date() and not event.isPrivate %} Attend {% endif %}</span>
+        </div>
+        <div>
+            <span class="label">Event:</span><span class="value name">{{ event.name }}</span>
+        </div>
+        <div>
+            <span class="label">Location:</span><span class="value location">{{event.address}}, {{ event.city|capitalize }}</span>
+        </div>
+        <div>
+            <span class="label">Event date:</span><span class="value date">{{ event.eventDate|date('Y-m-d H:i') }}</span>
+        </div>
+        <div>
+            <span class="label">Duration:</span><span class="value date">{{ event.duration }}h</span>
+        </div>
+        <div>
+            <span class="label">Description:</span><span class="value description">{{ event.description }}</span>
+        </div>
+    </div>
+</div>
+<script src="{{ asset('js/map.js') }}" rel="stylesheet"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkRDMSX2SM5qU3YEwbCmbTZ9WnnC7-L4A&callback=map.event"></script>
+{% endblock %}
