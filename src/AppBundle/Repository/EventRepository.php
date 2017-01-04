@@ -8,6 +8,25 @@ class EventRepository extends EntityRepository
 {
     public function getPublicEvents()
     {
-        return $this->findBy(['isPrivate' => 0], ['eventDate' => 'desc']);
+        return $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from('AppBundle:Event', 'e')
+                ->where('e.eventDate >= :now AND e.isPrivate = 0')
+                ->setParameter('now', new \DateTime)
+                ->orderBy('e.eventDate', 'asc')
+                ->getQuery()
+                ->getArrayResult();
+    }
+
+    public function getUserEvents($user)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from('AppBundle:Event', 'e')
+                ->where('e.user = :user')
+                ->setParameter('user', $user)
+                ->orderBy('e.eventDate', 'asc')
+                ->getQuery()
+                ->getArrayResult();
     }
 }

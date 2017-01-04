@@ -67,7 +67,6 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 .event-details {
     overflow: hidden;
-    border: 1px solid #0000F0;
 }
 
 .event-details .map {
@@ -77,10 +76,10 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 }
 
 .event-details .details {
-    border: 1px solid #000000;
     font-size: 12px;
     margin-top: 10px;
     margin-right: 10px;
+    max-width: 225px;
 }
 
 .event-details .label {
@@ -90,8 +89,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
     margin-left: 3px;
 }
 
-events {
-    border: 1px solid #000000;
+.events {
     overflow: hidden;
 }
 .event {
@@ -109,4 +107,33 @@ events {
 }
 .event span {
     font-size: 12px;
+}
+.event .edit {
+    float: right;
+    display: none;
+    padding-right: 2px;
+}
+
+.attend {
+    border: 2px solid #08C;
+    background-color: #1098DC;
+    margin: 5px 5px;
+    padding: 3px 8px;
+    width: 86%;
+    text-align: center;    
+}
+.button {
+    cursor: pointer;
+}
+
+.participants {
+    margin-top: 10px;
+}
+.participants .title {
+    font-size: 14px;
+}
+
+
+.invitaions {
+    margin-top: 10px;
 }

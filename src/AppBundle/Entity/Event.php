@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
@@ -83,10 +83,17 @@ class Event
      */
     protected $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Participation", mappedBy="event")
+     */
+    protected $participants;
+    
     public function __construct()
     {
         $this->eventDate = new \DateTime;
         $this->applyEndDate = new \DateTime;
+        $this->alias = '';
+        $this->participants = new ArrayCollection;
     }
     /**
      * Get id
@@ -408,5 +415,39 @@ class Event
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * Add participant
+     *
+     * @param \AppBundle\Entity\Participation $participant
+     *
+     * @return Event
+     */
+    public function addParticipant(\AppBundle\Entity\Participation $participant)
+    {
+        $this->participants[] = $participant;
+
+        return $this;
+    }
+
+    /**
+     * Remove participant
+     *
+     * @param \AppBundle\Entity\Participation $participant
+     */
+    public function removeParticipant(\AppBundle\Entity\Participation $participant)
+    {
+        $this->participants->removeElement($participant);
+    }
+
+    /**
+     * Get participants
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
     }
 }

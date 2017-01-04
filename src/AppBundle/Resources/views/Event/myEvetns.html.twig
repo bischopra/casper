@@ -1,0 +1,16 @@
+{% extends 'default/index.html.twig' %}
+
+{% block title %}Events organized by me{% endblock %}
+
+{% block content %}
+    <div class="events">
+        {% for event in events %}
+            <div class="event">
+                <div class="edit"><a href="{{ path('event', {'id': event.id}) }}">Edit</a></div>
+                <a href="{{ path('event_details', {'alias': event.alias}) }}" title="{{ event.name }}">{{ event.name|slice(0, 30) }}</a><br/>
+                <span title="Can sign up untill: {{ event.applyEndDate|date('M d Y') }}">{{ event.eventDate|date('M d Y H:i') }}</span><br/>
+                <span>{{ event.address|capitalize }}, {{ event.city|capitalize }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

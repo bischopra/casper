@@ -2,7 +2,7 @@
 
 namespace AppBundle\Utils;
 
-class EventUtils
+class AliasUtils
 {
     public static function makeAlias($name, $id)
     {
@@ -15,7 +15,7 @@ class EventUtils
         {
             return $found[1];
         }
-        return 0;
+        throw new \Exception("invalid alias structure");
     }
     
     public static function utf8flat($s)

@@ -4,10 +4,12 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Event;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Utils\EventUtils;
+use AppBundle\Utils\AliasUtils;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EventController extends Controller
 {
@@ -31,12 +33,11 @@ class EventController extends Controller
         {
             $event = $form->getData('appbundle_event');
             $event->setUser($this->getUser());
-            $event->setAlias(EventUtils::makeAlias($event->getName(), $event->getId()));
 
             $em->persist($event);
             $em->flush();
 
-            $event->setAlias(EventUtils::makeAlias($event->getName(), $event->getId()));
+            $event->setAlias(AliasUtils::makeAlias($event->getName(), $event->getId()));
             $em->persist($event);
             $em->flush();
 
@@ -49,15 +50,40 @@ class EventController extends Controller
     }
 
     /**
+     * @Route("/event/{alias}", name="event_attend")
+     * @Method({"POST"})
+     */
+    public function eventAttendAction($alias)
+    {
+        $id = AliasUtils::decodeAliasToID($alias);
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('AppBundle:Event')->find($id);
+        $user = $this->getUser();
+
+        $status = $em->getRepository('AppBundle:Participation')->attend($event, $user);
+
+        return new JsonResponse(['status' => $status, 'name' => $user->getNick()]);
+    }
+
+    /**
      * @Route("/event/{alias}", name="event_details")
+     * @Method({"GET"})
      */
     public function eventDetailsAction($alias)
     {
-        $id = EventUtils::decodeAliasToID($alias);
+        $id = AliasUtils::decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository('AppBundle:Event')->find($id);
+        $participation = $em->getRepository('AppBundle:Participation')->getParticipation($this->getUser(), $event);
+        $isOwner = 0;
+        if ($event->getUser() == $this->getUser())
+        {
+            $isOwner = 1;
+        }
         return $this->render('AppBundle:Event:eventDetails.html.twig', array(
             'event' => $event,
+            'participation' => $participation,
+            'isOwner' => $isOwner,
         ));
     }
 
@@ -67,10 +93,21 @@ class EventController extends Controller
     public function eventsAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $events = $em->getRepository('AppBundle:Event')->findAll();
+        $events = $em->getRepository('AppBundle:Participation')->getUserAttendingEvents($this->getUser());
         return $this->render('AppBundle:Event:events.html.twig', array(
-            'evetns' => $events,
+            'events' => $events,
         ));
     }
 
+    /**
+     * @Route("/myevents", name="my_events")
+     */
+    public function myEventsAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $events = $em->getRepository('AppBundle:Event')->getUserEvents($this->getUser());
+        return $this->render('AppBundle:Event:myEvetns.html.twig', array(
+            'events' => $events,
+        ));
+    }
 }

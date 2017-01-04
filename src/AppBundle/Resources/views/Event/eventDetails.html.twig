@@ -7,8 +7,17 @@
     <div id="map" class="map fleft" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}"></div>
     <div class="details fleft">
         <div>
-            <span>{% if event.maxGuestCount and date(event.applyEndDate) > date() and not event.isPrivate %} Attend {% endif %}</span>
+        {% if not app.user %}
+            <div class="attend fleft">Please log in to attend</div>
+        {% elseif participation and participation.id and not participation.isInvitation %}
+            <div class="attend fleft">Already attending</div>
+        {% elseif event.maxGuestCount and date(event.applyEndDate) > date() and not event.isPrivate %}
+            <div class="attend button fleft">Attend to this event</div>
+        {% elseif date(event.applyEndDate) > date() and event.isPrivate and participation and participation.isInvitation %}
+            <div class="attend button fleft">Accept invitation</div>
+        {% endif %}
         </div>
+        <div class="clr"></div>
         <div>
             <span class="label">Event:</span><span class="value name">{{ event.name }}</span>
         </div>
@@ -24,6 +33,17 @@
         <div>
             <span class="label">Description:</span><span class="value description">{{ event.description }}</span>
         </div>
+        {% if isOwner %}
+            <div class="invitaions">Send Invitations</div>
+        {% endif %}
+        {% if event.participants %}
+            <div class="participants">
+                <div class="title">Participants ({{ event.participants|length }}):</div>
+            {% for user in event.participants %}
+                <div class="participant">{{ user.user.nick }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 <script src="{{ asset('js/map.js') }}" rel="stylesheet"></script>
