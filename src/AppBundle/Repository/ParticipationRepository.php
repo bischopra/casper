@@ -4,10 +4,12 @@ namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Participation;
+use AppBundle\Entity\Event;
+use AppBundle\Entity\User;
 
 class ParticipationRepository extends EntityRepository
 {
-    public function getUserAttendingEvents($user)
+    public function getUserAttendingEvents(User $user)
     {
         return $this->getEntityManager()->createQueryBuilder()
                 ->select('p, e')
@@ -19,12 +21,12 @@ class ParticipationRepository extends EntityRepository
                 ->getArrayResult();
     }
 
-    public function getParticipation($user, $event)
+    public function getParticipation(User $user, Event $event)
     {
         return $this->findOneBy(['user' => $user, 'event' => $event]);
     }
 
-    public function attend($event, $user)
+    public function attend(Event $event, User $user)
     {
         $participation = $this->getParticipation($user, $event);
         if (!$participation)
