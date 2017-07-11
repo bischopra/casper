@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Participation;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Utils\AliasUtils;
@@ -23,7 +24,7 @@ class EventController extends Controller
         $event = new Event();
         if ($id > 0)
         {
-            $event = $em->getRepository('AppBundle:Event')->find($id);
+            $event = $em->getRepository(Event::class)->find($id);
         }
         $form = $this->createForm(EventType::class, $event);
 
@@ -57,10 +58,10 @@ class EventController extends Controller
     {
         $id = AliasUtils::decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
-        $event = $em->getRepository('AppBundle:Event')->find($id);
+        $event = $em->getRepository(Event::class)->find($id);
         $user = $this->getUser();
 
-        $status = $em->getRepository('AppBundle:Participation')->attend($event, $user);
+        $status = $em->getRepository(Participation::class)->attend($event, $user);
 
         return new JsonResponse(['status' => $status, 'name' => $user->getNick()]);
     }
@@ -73,8 +74,8 @@ class EventController extends Controller
     {
         $id = AliasUtils::decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
-        $event = $em->getRepository('AppBundle:Event')->find($id);
-        $participation = $em->getRepository('AppBundle:Participation')->getParticipation($this->getUser(), $event);
+        $event = $em->getRepository(Event::class)->find($id);
+        $participation = $em->getRepository(Participation::class)->getParticipation($this->getUser(), $event);
         $isOwner = 0;
         if ($event->getUser() == $this->getUser())
         {
@@ -105,9 +106,33 @@ class EventController extends Controller
     public function myEventsAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $events = $em->getRepository('AppBundle:Event')->getUserEvents($this->getUser());
+        $events = $em->getRepository(Event::class)->getUserEvents($this->getUser());
         return $this->render('AppBundle:Event:myEvetns.html.twig', array(
             'events' => $events,
         ));
+    }
+
+    /**
+     * @Route("/eventsonmap", name="events_on_map")
+     */
+    public function showOnMapAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $events = $em->getRepository(Event::class)->getUserEvents($this->getUser());
+        return $this->render('AppBundle:Event:eventsOnMap.html.twig', array(
+            'events' => $events,
+        ));
+    }
+
+    /**
+     * @Route("/nearbyevents", name="nearby_events")
+     */
+    public function nearbyeventsAction(Request $request)
+    {
+        $lat = $request->request->get('lat', 0);
+        $lng = $request->request->get('lng', 0);
+        $em = $this->getDoctrine()->getManager();
+        $events = $em->getRepository(Event::class)->getNearbyEvents($lat, $lng, 5);
+        return new JsonResponse($events);
     }
 }

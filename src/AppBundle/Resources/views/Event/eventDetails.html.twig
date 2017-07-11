@@ -38,7 +38,7 @@
         {% endif %}
         {% if event.participants %}
             <div class="participants">
-                <div class="title">Participants ({{ event.participants|length }}):</div>
+                <div class="title">Participants (<span class="parlen">{{ event.participants|length }}</span>):</div>
             {% for user in event.participants %}
                 <div class="participant">{{ user.user.nick }}</div>
             {% endfor %}

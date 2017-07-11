@@ -1,0 +1,18 @@
+{% extends 'default/index.html.twig' %}
+
+{% block title %}Find events on map{% endblock %}
+
+{% block content %}
+    <div class="map-events">
+        <div class="form">
+            <input id="city" type="text" placeholder="CityName"/>
+            <input id="location" type="text" placeholder="Street nr"/>
+            <span>Podaj lub wskaż na mapie swoją lokalizację</span>
+        </div>
+        <div id="map"></div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/map.js') }}" rel="stylesheet"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkRDMSX2SM5qU3YEwbCmbTZ9WnnC7-L4A&callback=map.showEvents"></script>
+{% endblock %}

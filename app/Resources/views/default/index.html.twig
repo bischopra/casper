@@ -2,6 +2,8 @@
 
 {% block body %}
     <div id="wrapper">
+        <div class="homepage fleft"><a href="{{ path('homepage') }}">Casper</a></div>
+        <div class="maplink fleft"><a href="{{ path('events_on_map') }}">Find events on map</a></div>
         <div id="login-box">
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
