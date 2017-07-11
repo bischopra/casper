@@ -32,7 +32,6 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $event = $form->getData('appbundle_event');
             $event->setUser($this->getUser());
 
             $em->persist($event);
