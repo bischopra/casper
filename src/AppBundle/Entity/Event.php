@@ -19,7 +19,7 @@ class Event
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=192)
      */
     protected $name;
 
@@ -29,17 +29,17 @@ class Event
     protected $alias;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=128)
      */
     protected $city;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=128)
      */
     protected $address;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     protected $description;
 
