@@ -22,9 +22,11 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $event = new Event();
+        $title = 'Add new event';
         if ($id > 0)
         {
             $event = $em->getRepository(Event::class)->find($id);
+            $title = 'Edit event &bull; ' . $event->getName();
         }
         $form = $this->createForm(EventType::class, $event);
 
@@ -45,6 +47,7 @@ class EventController extends Controller
         }
 
         return $this->render('AppBundle:Event:event.html.twig', array(
+            'title' => $title,
             'form' => $form->createView(),
         ));
     }
