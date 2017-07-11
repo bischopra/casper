@@ -72,6 +72,9 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
+    from_email:
+        address: tet@test.local
+        sender_name: test
     registration:
         form:
             type: AppBundle\Form\RegistrationType
