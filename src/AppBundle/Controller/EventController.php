@@ -9,15 +9,16 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Participation;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Utils\AliasUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Service\Alias;
+use AppBundle\Service\EventService;
 
 class EventController extends Controller
 {
     /**
      * @Route("/event/{id}", name="event", requirements={"id": "\d+"})
      */
-    public function eventAction(Request $request, $id = 0)
+    public function eventAction(Request $request, Alias $aliasService, $id = 0)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -39,7 +40,7 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
-            $event->setAlias(AliasUtils::makeAlias($event->getName(), $event->getId()));
+            $event->setAlias($aliasService->makeAlias($event->getName(), $event->getId()));
             $em->persist($event);
             $em->flush();
 
@@ -56,9 +57,9 @@ class EventController extends Controller
      * @Route("/event/{alias}", name="event_attend")
      * @Method({"POST"})
      */
-    public function eventAttendAction($alias)
+    public function eventAttendAction(Alias $aliasService, $alias)
     {
-        $id = AliasUtils::decodeAliasToID($alias);
+        $id = $aliasService->decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository(Event::class)->find($id);
         $user = $this->getUser();
@@ -72,9 +73,9 @@ class EventController extends Controller
      * @Route("/event/{alias}", name="event_details")
      * @Method({"GET"})
      */
-    public function eventDetailsAction($alias)
+    public function eventDetailsAction(Alias $aliasService, $alias)
     {
-        $id = AliasUtils::decodeAliasToID($alias);
+        $id = $aliasService->decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository(Event::class)->find($id);
         $participation = $em->getRepository(Participation::class)->getParticipation($this->getUser(), $event);
@@ -129,12 +130,9 @@ class EventController extends Controller
     /**
      * @Route("/nearbyevents", name="nearby_events")
      */
-    public function nearbyeventsAction(Request $request)
+    public function nearbyeventsAction(Request $request, EventService $eventService)
     {
-        $lat = $request->request->get('lat', 0);
-        $lng = $request->request->get('lng', 0);
-        $em = $this->getDoctrine()->getManager();
-        $events = $em->getRepository(Event::class)->getNearbyEvents($lat, $lng, 5);
+        $events = $eventService->getNearbyEvents($request->request->get('lat', 0), $request->request->get('lng', 0), $request->request->get('radius', 5));
         return new JsonResponse($events);
     }
 }

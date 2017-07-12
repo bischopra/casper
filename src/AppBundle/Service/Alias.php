@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Utils;
+namespace AppBundle\Service;
 
-class AliasUtils
+class Alias
 {
-    public static function makeAlias($name, $id)
+    public function makeAlias($name, $id)
     {
-        return self::utf8flat($name . '-' . $id);
+        return $this->utf8flat($name . '-' . $id);
     }
 
-    public static function decodeAliasToID($alias)
+    public function decodeAliasToID($alias)
     {
         if (preg_match("@-([0-9]+)$@", $alias, $found))
         {
@@ -18,10 +18,9 @@ class AliasUtils
         throw new \Exception("invalid alias structure");
     }
     
-    public static function utf8flat($s)
+    public function utf8flat($s)
     {
-        $s = normalizer_normalize($s);
-        $s = mb_strtolower($s, 'UTF-8');
+        $s = mb_strtolower(normalizer_normalize($s), 'UTF-8');
 
         $map = [
             'a' => ['@\x{0104}@u','@\x{0105}@u'],
@@ -38,10 +37,7 @@ class AliasUtils
         {
             $s = preg_replace($chars, $letter, $s);
         }
-        $s = preg_replace("@[^0-9a-z]+@i", ' ', $s);
-        $s = str_replace(' ', '-', $s);
-        $s = trim($s, '-');
-        $s = preg_replace("@[\-]+@", '-', $s);
+        $s = preg_replace("@[\-]+@", '-', trim(str_replace(' ', '-', preg_replace("@[^0-9a-z]+@i", ' ', $s)), '-'));
         return $s;
     }
 }
