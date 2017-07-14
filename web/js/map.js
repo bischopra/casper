@@ -61,19 +61,7 @@ var map = {
         map.gmap = new google.maps.Map(mapCanvas, mapOptions);
 
         map.gmap.addListener('click', function(e) {
-            marker.deleteMarkers();
-            marker.addMarker(e.latLng, map.gmap, {isDraggable: 1}, [
-                function(m){
-                    map.placeEvents(m.getPosition(), 5);
-                },
-                function(m){
-                    marker.addOnDrag(m, [
-                        function(m){
-                            map.placeEvents(m.getPosition(), 5);
-                        }
-                    ]);
-                }
-            ]);
+            map.eventsMarkerHandle(e.latLng);
         });
 
         if (navigator.geolocation) {
@@ -87,6 +75,21 @@ var map = {
             map.gmap.setZoom(12);
           });
         }
+    },
+    eventsMarkerHandle: function(latLng){
+        marker.deleteMarkers();
+        marker.addMarker(latLng, map.gmap, {isDraggable: 1}, [
+            function(m){
+                map.placeEvents(m.getPosition(), 5);
+            },
+            function(m){
+                marker.addOnDrag(m, [
+                    function(m){
+                        map.eventsMarkerHandle(m.getPosition());
+                    }
+                ]);
+            }
+        ]);
     },
     event: function(){
         var mapCanvas = document.getElementById(map.mapId);
@@ -110,6 +113,22 @@ var map = {
         });
         m.setMap(map.gmap);
     },
+    eventMarkerHandle: function(latLng){
+        console.log(latLng);
+        marker.deleteMarkers();
+        marker.addMarker(latLng, map.gmap, {isDraggable: 1}, [
+            function(m){
+                marker.fillFormFields(m);
+            },
+            function(m){
+                marker.addOnDrag(m, [
+                    function(m){
+                        marker.fillFormFields(m);
+                    }
+                ]);
+            }
+        ]);
+    },
     init: function(){
         var mapCanvas = document.getElementById(map.mapId);
         var mapOptions = {
@@ -120,20 +139,15 @@ var map = {
         };
         map.gmap = new google.maps.Map(mapCanvas, mapOptions);
 
+        var lat = $('input[name="appbundle_event[latitude]"]').val();
+        var lng = $('input[name="appbundle_event[longitude]"]').val();
+        if (lat && lng)
+        {
+            map.eventMarkerHandle({lat: lat * 1, lng: lng * 1});
+        }
+
         map.gmap.addListener('click', function(e) {
-            marker.deleteMarkers();
-            marker.addMarker(e.latLng, map.gmap, {isDraggable: 1}, [
-                function(m){
-                    marker.fillFormFields(m);
-                },
-                function(m){
-                    marker.addOnDrag(m, [
-                        function(m){
-                            marker.fillFormFields(m);
-                        }
-                    ]);
-                }
-            ]);
+            map.eventMarkerHandle(e.latLng);
         });
 
         if (navigator.geolocation) {

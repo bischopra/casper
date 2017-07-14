@@ -18,8 +18,8 @@ class EventService
 
     public function getNearbyEvents($lat, $lng, $distance = 5)
     {
-        $degDis = $this->distance2degres($distance);
-        $debug = ['degDis' => $degDis, 'lat' => $lat, 'lng' => $lng];
+        //$degDis = $this->distance2degres($distance);
+        $debug = ['degDis' => $distance, 'lat' => $lat, 'lng' => $lng];
         $qr = $this->em->getRepository(Event::class)->getNearbyEvents($lat, $lng, $distance);
         $result = [];
         foreach($qr as $event)
