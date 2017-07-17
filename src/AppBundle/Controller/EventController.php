@@ -7,11 +7,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Participation;
+use AppBundle\Entity\User;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Service\Alias;
 use AppBundle\Service\EventService;
+use AppBundle\Service\Invitation;
 
 class EventController extends Controller
 {
@@ -134,5 +136,16 @@ class EventController extends Controller
     {
         $events = $eventService->getNearbyEvents($request->request->get('lat', 0), $request->request->get('lng', 0), $request->request->get('radius', 5));
         return new JsonResponse($events);
+    }
+
+    /**
+     * @Route("/invitations/send/{idEvent}", name="send_invitations", requirements={"idEvent": "\d+"})
+     */
+    public function sendInvitationAction(Invitation $invitation, $idEvent, \Swift_Mailer $mailer)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $participants = $em->getRepository(Participation::class)->getParticipatingUsers($idEvent);
+        $users = $em->getRepository(User::class)->getUsers($this->getUser(), $participants);
+        return new JsonResponse(['status' => $invitation->sendInvitations($idEvent, $users, $mailer)]);
     }
 }

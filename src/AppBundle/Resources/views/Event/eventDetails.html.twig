@@ -40,7 +40,7 @@
             <div class="participants">
                 <div class="title">Participants (<span class="parlen">{{ event.participants|length }}</span>):</div>
             {% for user in event.participants %}
-                <div class="participant">{{ user.user.nick }}</div>
+                <div class="participant">{{ user.user.nick }}: {% if user.isInvitation %}<span style="{% if user.isInvitationAccepted %}color: green;{% else %}color: red;{% endif %}">INVITE</span>{% endif %}</div>
             {% endfor %}
             </div>
         {% endif %}

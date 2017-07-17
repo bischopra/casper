@@ -16,15 +16,17 @@
             {% endif %}
         </div>
         <div class="clr"></div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <div class="logged-menu">
+                <a href="{{ path('event') }}">Add Event</a>
+                <a href="{{ path('app_event_events') }}">Events I attend</a>
+                <a href="{{ path('my_events') }}">Events I added</a>
+            </div>
+        {% endif %}
         {% block content %}
         <div id="container">
             <div id="welcome">
                 <h1><span>Welcome to</span> Casper Events</h1>
-                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                    <a href="{{ path('event') }}">Add Event</a>
-                    <a href="{{ path('app_event_events') }}">Events I added</a>
-                    <a href="{{ path('my_events') }}">Events I attend</a>
-                {% endif %}
             </div>
             <h2>Events:</h2>
             <div class="events">

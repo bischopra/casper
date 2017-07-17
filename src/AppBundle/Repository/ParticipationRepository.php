@@ -43,7 +43,36 @@ class ParticipationRepository extends EntityRepository
 
         $em = $this->getEntityManager();
         $em->persist($participation);
-        $em->flush();        
+        $em->flush();
         return 1;
+    }
+
+    public function setInvitationAsSent(Event $event, User $user)
+    {
+        $participation = $this->getParticipation($user, $event);
+        if (!$participation)
+        {
+            $participation = new Participation;
+            $participation->setEvent($event);
+            $participation->setUser($user);
+        }
+        $participation->setIsInvitation(1);
+        $participation->setInvitationDate(new \DateTime());
+
+        $em = $this->getEntityManager();
+        $em->persist($participation);
+        $em->flush();
+        return 1;
+    }
+
+    public function getParticipatingUsers($idEvent)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+                ->select('p')
+                ->from('AppBundle:Participation', 'p')
+                ->where('p.event = :id AND (p.isInvitation = 0 OR (p.isInvitation = 1 AND p.isInvitationAccepted = 1))')
+                ->setParameter('id', $idEvent)
+                ->getQuery()
+                ->getResult();
     }
 }
