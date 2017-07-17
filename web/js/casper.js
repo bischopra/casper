@@ -10,12 +10,29 @@ $(function(){
             url: location.href,
             method: "POST",
             success: function(data) {
-                if (data.status === 1)
-                {
+                if (data.status === 1){
                     obj.off("click").removeClass('button').html("Already attending");
                     $('.participants').append('<div class="participant">' + data.name + '</div>');
                     $('.participants .parlen').text($('.participants .participant').length);
                 }
+            },
+            error: function(){
+                alert('Your request could not be completed. Contact administrator.');
+            }
+        });
+    });
+    $('.invitaions.button').click(function(){
+        var obj = $(this);
+        $.ajax({
+            url: '/invitations/send/' + obj.attr('data-id'),
+            method: "GET",
+            success: function(data) {
+                if (data.status === 1) {
+                    window.location.reload();
+                }
+            },
+            error: function(){
+                alert('Your request could not be completed. Contact administrator.');
             }
         });
     });

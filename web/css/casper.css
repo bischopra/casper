@@ -118,7 +118,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
     padding-right: 2px;
 }
 
-.attend {
+.attend, .invitaions {
     border: 2px solid #08C;
     background-color: #1098DC;
     margin: 5px 5px;

@@ -13,7 +13,7 @@
             <div class="attend fleft">Already attending</div>
         {% elseif event.maxGuestCount and date(event.applyEndDate) > date() and not event.isPrivate %}
             <div class="attend button fleft">Attend to this event</div>
-        {% elseif date(event.applyEndDate) > date() and event.isPrivate and participation and participation.isInvitation %}
+        {% elseif date(event.applyEndDate) >= date() and event.isPrivate and participation and participation.isInvitation %}
             <div class="attend button fleft">Accept invitation</div>
         {% endif %}
         </div>
@@ -34,7 +34,7 @@
             <span class="label">Description:</span><span class="value description">{{ event.description }}</span>
         </div>
         {% if isOwner %}
-            <div class="invitaions">Send Invitations</div>
+            <div data-id="{{ event.id }}" class="invitaions button">Send Invitations</div>
         {% endif %}
         {% if event.participants %}
             <div class="participants">
