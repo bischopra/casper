@@ -41,6 +41,34 @@ $(function(){
     },function(){
         $('.edit', $(this)).hide();
     });
+    $('.participant').hover(function(){
+        $('.remove', $(this)).show();
+    },function(){
+        $('.remove', $(this)).hide();
+    });
+    $('.participant .remove').click(function(){
+        if(confirm("Are you sure you want to remove this user from event?")){
+            var obj = $(this).closest('.participant');
+            $.ajax({
+                url: location.href,
+                method: "POST",
+                data: 'action=remove&uid=' + $(obj).attr('data-pid'),
+                success: function(data) {
+                    if (data.status === 1){
+                        $(obj).animate({
+                            height: "toggle"
+                        }, 'normal', function(){
+                            $(this).remove();
+                            $('.participants .parlen').text($('.participants .participant').length);
+                        });
+                    }
+                },
+                error: function(){
+                    alert('Your request could not be completed. Contact administrator.');
+                }
+            });
+        }
+    });
 
     $('input[name="appbundle_event[city]"],input[name="appbundle_event[address]"]').change(function(){
         var address = $('input[name="appbundle_event[city]"]').val() + ', "' + $('input[name="appbundle_event[address]"]').val() + '"';

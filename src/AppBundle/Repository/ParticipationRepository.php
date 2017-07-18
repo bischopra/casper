@@ -47,6 +47,15 @@ class ParticipationRepository extends EntityRepository
         return 1;
     }
 
+    public function remove(Event $event, User $user)
+    {
+        $participation = $this->getParticipation($user, $event);
+        $em = $this->getEntityManager();
+        $em->remove($participation);
+        $em->flush();
+        return 1;
+    }
+
     public function setInvitationAsSent(Event $event, User $user)
     {
         $participation = $this->getParticipation($user, $event);

@@ -59,16 +59,25 @@ class EventController extends Controller
      * @Route("/event/{alias}", name="event_attend")
      * @Method({"POST"})
      */
-    public function eventAttendAction(Alias $aliasService, $alias)
+    public function eventAttendAction(Request $request, Alias $aliasService, $alias)
     {
+        $action = $request->request->get('action', 'attend');
+
         $id = $aliasService->decodeAliasToID($alias);
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository(Event::class)->find($id);
-        $user = $this->getUser();
 
-        $status = $em->getRepository(Participation::class)->attend($event, $user);
+        switch($action)
+        {
+            case 'attend':
+                $status = $em->getRepository(Participation::class)->attend($event, $this->getUser());
+                break;
+            case 'remove':
+                $status = $em->getRepository(Participation::class)->remove($event, $em->getRepository(User::class)->find($request->request->get('uid', 0)));
+                break;
+        }
 
-        return new JsonResponse(['status' => $status, 'name' => $user->getNick()]);
+        return new JsonResponse(['status' => $status]);
     }
 
     /**

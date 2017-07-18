@@ -40,12 +40,17 @@
             <div class="participants">
                 <div class="title">Participants (<span class="parlen">{{ event.participants|length }}</span>):</div>
             {% for user in event.participants %}
-                <div class="participant">{{ user.user.nick }}: {% if user.isInvitation %}<span style="{% if user.isInvitationAccepted %}color: green;{% else %}color: red;{% endif %}">INVITE</span>{% endif %}</div>
+                <div data-pid="{{ user.user.id }}" class="participant">
+                    {{ user.user.nick }}: {% if user.isInvitation %}<span style="{% if user.isInvitationAccepted %}color: green;{% else %}color: red;{% endif %}">INVITE</span>{% endif %}
+                    <div class="remove" style="display: none; float: right;">Remove</div>
+                </div>
             {% endfor %}
             </div>
         {% endif %}
     </div>
 </div>
+{% endblock %}
+{% block javascripts %}
 <script src="{{ asset('js/map.js') }}" rel="stylesheet"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkRDMSX2SM5qU3YEwbCmbTZ9WnnC7-L4A&callback=map.event"></script>
 {% endblock %}

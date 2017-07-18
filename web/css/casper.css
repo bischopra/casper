@@ -136,7 +136,14 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 .participants .title {
     font-size: 14px;
 }
-
+.participants .participant {
+    border-top: 1px solid lightgrey;
+    padding: 2px;
+}
+.participant .remove:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 .invitaions {
     margin-top: 10px;
