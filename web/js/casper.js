@@ -69,6 +69,24 @@ $(function(){
             });
         }
     });
+    $('.notify.button').click(function(){
+        var obj = $(this);
+        var lat = $(this).attr('data-lat');
+        var lng = $(this).attr('data-lng');
+        $.ajax({
+            url: location.href,
+            method: "POST",
+            data: 'lat=' + lat + '&lng=' + lng,
+            success: function(data) {
+                if (data.status === 1) {
+                    obj.addClass('green');
+                }
+            },
+            error: function(){
+                alert('Your request could not be completed. Contact administrator.');
+            }
+        });
+    });
 
     $('input[name="appbundle_event[city]"],input[name="appbundle_event[address]"]').change(function(){
         var address = $('input[name="appbundle_event[city]"]').val() + ', "' + $('input[name="appbundle_event[address]"]').val() + '"';

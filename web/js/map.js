@@ -50,6 +50,7 @@ var map = {
     initLng: 19.092234,
     initZoom: 6,
     mapId: "map",
+    circles: [],
     showEvents: function(){
         var mapCanvas = document.getElementById(map.mapId);
         var mapOptions = {
@@ -88,6 +89,23 @@ var map = {
                         map.eventsMarkerHandle(m.getPosition());
                     }
                 ]);
+            },
+            function(m){
+                for(circle in map.circles) {
+                    map.circles[circle].setMap(null);
+                }
+                var eventCircle = new google.maps.Circle({
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.10,
+                    map: map.gmap,
+                    center: m.getPosition(),
+                    radius: 5000
+                });
+                map.circles.push(eventCircle);
+                $('.notify.button').attr('data-lat', m.getPosition().lat).attr('data-lng', m.getPosition().lng);
             }
         ]);
     },

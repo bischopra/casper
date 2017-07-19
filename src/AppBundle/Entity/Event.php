@@ -49,6 +49,11 @@ class Event
     protected $eventDate;
 
     /**
+     * @ORM\Column(type="datetime", name="addDate", nullable=true)
+     */
+    protected $addDate;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $duration;

@@ -8,19 +8,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Participation;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Notification;
 use AppBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Service\Alias;
 use AppBundle\Service\EventService;
 use AppBundle\Service\Invitation;
+use AppBundle\Service\NotificationService;
 
 class EventController extends Controller
 {
     /**
      * @Route("/event/{id}", name="event", requirements={"id": "\d+"})
      */
-    public function eventAction(Request $request, Alias $aliasService, $id = 0)
+    public function eventAction(Request $request, Alias $aliasService, NotificationService $notification, $id = 0)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -45,6 +47,8 @@ class EventController extends Controller
             $event->setAlias($aliasService->makeAlias($event->getName(), $event->getId()));
             $em->persist($event);
             $em->flush();
+
+            $notification->sendNotificationsOnEventAdd($event);
 
             return $this->redirectToRoute('homepage');
         }
@@ -124,6 +128,25 @@ class EventController extends Controller
         return $this->render('AppBundle:Event:myEvetns.html.twig', array(
             'events' => $events,
         ));
+    }
+
+    /**
+     * @Route("/eventsonmap")
+     * @Method({"POST"})
+     */
+    public function setUpNotificatioinAction(Request $request)
+    {
+        $lat = $request->request->get('lat', null);
+        $lng = $request->request->get('lng', null);
+
+        $status = 0;
+        if ($lat !== null && $lng !== null)
+        {
+            $em = $this->getDoctrine()->getManager();
+            $status = $em->getRepository(Notification::class)->setNotification($this->getUser(), $lat, $lng);
+        }
+
+        return new JsonResponse(['status' => $status]);
     }
 
     /**
